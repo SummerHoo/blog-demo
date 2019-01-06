@@ -1,0 +1,61 @@
+
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/html/
+      suffix: .jsp
+  aop:
+    auto: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirms: true   #消息发送到交换机确认机制,是否确认回调
+
+  http:
+    encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
+  #profiles : dev
+  datasource:
+    name: test
+    url: jdbc:mysql://10.30.10.14:3306/testtemp
+    username: root
+    password: root
+    ###### 使用druid数据源 ############
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  redis:
+    database: 0
+    host: 192.168.1.11
+    port: 6379
+    password: Admin123#
+    pool:
+        max-active: 1024
+        max-idle: 200
+        max-wait: 1000
+
+mybatis:
+  mapperLocations: classpath*:com/demo/mapping/*.xml
+  typeAliasesPackage: com.demo.model
+
+server:
+  port: 8180
+  context-path: /demo
+
