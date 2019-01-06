@@ -33,22 +33,4 @@ public class MqTestController {
         firstSender.sendThird(uuid,message);
         return uuid;
     }
-
-    @GetMapping("/delay")
-    public void delayMsg(String message) throws InterruptedException {
-        String uuid = UUID.randomUUID().toString();
-        firstSender.sendMessageDelay();
-    }
-
-    @GetMapping("/delayTTL")
-    public void delayTTL(String message) throws InterruptedException {
-        String uuid = UUID.randomUUID().toString();
-        firstSender.sendPerQueueTTL();
-    }
-
-    @GetMapping("/errormsg")
-    public void errormsg(String message) throws InterruptedException {
-        String uuid = UUID.randomUUID().toString();
-        firstSender.sendErrorMsg();
-    }
 }

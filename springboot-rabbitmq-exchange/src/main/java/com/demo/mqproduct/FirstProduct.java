@@ -1,14 +1,10 @@
 package com.demo.mqproduct;
 
-import com.demo.common.config.ExpirationMessagePostProcessor;
 import com.demo.common.config.RabbitMqConfig;
-import com.demo.mqconsumer.DelayConsumer;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Created with IntelliJ IDEA.
