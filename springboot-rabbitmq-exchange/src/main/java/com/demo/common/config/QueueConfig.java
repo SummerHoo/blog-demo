@@ -32,9 +32,24 @@ public class QueueConfig {
     }
 
     @Bean
-    public Queue thirdQueue() {
-        return new Queue("third-queue",true,false,false);
+    public Queue topicQueue() {
+        return new Queue("topic-queue",true,false,false);
     }
 
-    
+    @Bean
+    public Queue topicQueue1() {
+        return new Queue("topic-queue1",true,false,false);
+    }
+
+    @Bean
+    public Queue fanoutQueue1() {
+        return new Queue("fanout-queue1",true,false,false);
+    }
+
+    @Bean
+    public Queue fanoutQueue() {
+        return new Queue("fanout-queue",true,false,false);
+    }
+
+
 }

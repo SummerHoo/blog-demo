@@ -35,10 +35,17 @@ public class FirstProduct {
      * @param uuid
      * @param message
      */
-    public void sendThird(String uuid,Object message) {
+    public void sendTopic(String uuid,Object message) {
         CorrelationData correlationId = new CorrelationData(uuid);
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_TOPIC, "aa.topic.bbb",
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_TOPIC, "aaa.topic.bbb",
                 message, correlationId);
     }
+
+    public void sendFanout(String uuid,Object message) {
+        CorrelationData correlationId = new CorrelationData(uuid);
+        //中间是设置路由规则，由于是广播模式，这个规则会被抛弃
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_FANOUT, "", message);
+    }
+
 
 }

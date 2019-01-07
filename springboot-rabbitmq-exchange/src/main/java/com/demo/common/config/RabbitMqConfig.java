@@ -24,11 +24,14 @@ public class RabbitMqConfig {
     public static final String EXCHANGE = "exchangeTest";
     /** 消息交换机的名字*/
     public static final String EXCHANGE_TOPIC = "exchangeTopic";
+    public static final String EXCHANGE_FANOUT = "exchangeFanout";
+
     /** 队列key1*/
     public static final String ROUTINGKEY1 = "queue_one_key1";
     /** 队列key2*/
     public static final String ROUTINGKEY2 = "queue_one_key2";
     public static final String ROUTINGKEY3 = "*.topic.*";
+    public static final String ROUTINGKEY_TOPIC = "aaa.topic.*";
 
 
     @Autowired
@@ -59,12 +62,24 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Binding binding_third() {
-        return BindingBuilder.bind(queueConfig.thirdQueue()).to(exchangeConfig.topicExchange()).with(RabbitMqConfig.ROUTINGKEY3);
+    public Binding binding_topic() {
+        return BindingBuilder.bind(queueConfig.topicQueue()).to(exchangeConfig.topicExchange()).with(RabbitMqConfig.ROUTINGKEY3);
     }
 
-     
+    @Bean
+    public Binding binding_topic1() {
+        return BindingBuilder.bind(queueConfig.topicQueue1()).to(exchangeConfig.topicExchange()).with(RabbitMqConfig.ROUTINGKEY_TOPIC);
+    }
 
+    @Bean
+    public Binding binding_fanout() {
+        return BindingBuilder.bind(queueConfig.fanoutQueue()).to(exchangeConfig.fanoutExchange());
+    }
+
+    @Bean
+    public Binding binding_fanout_for_third() {
+        return BindingBuilder.bind(queueConfig.fanoutQueue1()).to(exchangeConfig.fanoutExchange());
+    }
 
     /**
      * queue listener  观察 监听模式

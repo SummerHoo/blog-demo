@@ -1,6 +1,7 @@
 package com.demo.common.config;
 
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,10 @@ public class ExchangeConfig {
         return topicExchange;
     }
 
-    
+    @Bean
+    public FanoutExchange fanoutExchange (){
+        FanoutExchange fanoutExchange = new FanoutExchange(RabbitMqConfig.EXCHANGE_FANOUT,true,false);
+        return fanoutExchange;
+    }
 
 }
