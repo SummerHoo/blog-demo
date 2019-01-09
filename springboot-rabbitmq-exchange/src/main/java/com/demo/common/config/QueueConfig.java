@@ -52,4 +52,38 @@ public class QueueConfig {
     }
 
 
+    /**
+     * 实际消费队列
+     * @return
+     */
+    @Bean
+    public Queue delayQueue() {
+        return new Queue(RabbitMqConfig.DELAY_PROCESS_QUEUE_NAME,true,false,false);
+    }
+
+    /**
+     * 延迟队列
+     * @return
+     */
+    @Bean
+    public Queue delayTTLQueue() {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("x-dead-letter-exchange",RabbitMqConfig.DELAY_EXCHANGE_NAME);
+        paramMap.put("x-dead-letter-routing-key",RabbitMqConfig.DELAY_QUEUE_ROUTING_KEY);
+        paramMap.put("x-message-ttl",3000);
+        return new Queue(RabbitMqConfig.QUEUE_TTL_NAME,true,false,false,paramMap);
+    }
+
+    /**
+     * 延迟队列，超时时间不一致
+     * @return
+     */
+    @Bean
+    public Queue delayTTLQueue2() {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("x-dead-letter-exchange",RabbitMqConfig.DELAY_EXCHANGE_NAME);// 死信交换机的名称
+        paramMap.put("x-dead-letter-routing-key",RabbitMqConfig.DELAY_QUEUE_ROUTING_KEY);// 死信交换机的routing_key
+        return new Queue(RabbitMqConfig.QUEUE_TTL_NAME2,true,false,false,paramMap);
+    }
+
 }

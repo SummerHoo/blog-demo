@@ -1,12 +1,14 @@
 package com.demo.common.config;
 
 import com.demo.mqcallback.MsgSendConfirmCallBack;
+import com.demo.mqconsumer.DelayConsumer;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +35,42 @@ public class RabbitMqConfig {
     public static final String ROUTINGKEY3 = "*.topic.*";
     public static final String ROUTINGKEY_TOPIC = "aaa.topic.*";
 
+    /**
+     * DLX死信交换机名字
+     */
+    public final static String DELAY_EXCHANGE_NAME = "delay_exchange";
+
+    /**
+     * message失效后进入的队列，也就是实际的消费队列
+     */
+    public final static String DELAY_PROCESS_QUEUE_NAME = "delay_process_queue";
+
+    /**
+     * 死信队列routing_key
+     */
+    public final static String DELAY_QUEUE_ROUTING_KEY = "delay_queue_key";
+    /**
+     * 延迟交换机
+     */
+    public final static String QUEUE_TTL_EXCHANGE_NAME = "queue_ttl_exchange";
+    /**
+     * 延迟队列名
+     */
+    public final static String QUEUE_TTL_NAME = "delay_ttl_queue1";
+
+    /**
+     * 延迟队列名2
+     */
+    public final static String QUEUE_TTL_NAME2 = "delay_ttl_queue2";
+
+    /**
+     * 延迟队列routing_key
+     */
+    public final static String QUEUE_TTL_ROUTING_KEY = "delay_ttl_queue_key";
+    /**
+     * 延迟队列routing_key
+     */
+    public final static String QUEUE_TTL_ROUTING_KEY2 = "delay_ttl_queue_key2";
 
     @Autowired
     private QueueConfig queueConfig;
@@ -81,6 +119,34 @@ public class RabbitMqConfig {
         return BindingBuilder.bind(queueConfig.fanoutQueue1()).to(exchangeConfig.fanoutExchange());
     }
 
+
+    /**
+     * 绑定死信队列
+     * @return
+     */
+    @Bean
+    public Binding dlxBinding() {
+        return BindingBuilder.bind(queueConfig.delayQueue()).to(exchangeConfig.delayExchange()).with(RabbitMqConfig.DELAY_QUEUE_ROUTING_KEY);
+    }
+
+    /**
+     * 绑定延迟队列1
+     * @return
+     */
+    @Bean
+    public Binding queueTTLBinding() {
+        return BindingBuilder.bind(queueConfig.delayTTLQueue()).to(exchangeConfig.perQueueTTLExchange()).with(RabbitMqConfig.QUEUE_TTL_ROUTING_KEY);
+    }
+
+    /**
+     * 绑定延迟队列2
+     * @return
+     */
+    @Bean
+    public Binding queueTTLBinding2() {
+        return BindingBuilder.bind(queueConfig.delayTTLQueue2()).to(exchangeConfig.perQueueTTLExchange()).with(RabbitMqConfig.QUEUE_TTL_ROUTING_KEY2);
+    }
+
     /**
      * queue listener  观察 监听模式
      * 当有消息到达时会通知监听在对应的队列上的监听对象
@@ -97,7 +163,20 @@ public class RabbitMqConfig {
         return simpleMessageListenerContainer;
     }
 
-   
+    /**
+     * 定义delay_process_queue队列的Listener Container
+     *
+     * @param connectionFactory
+     * @return
+     */
+    @Bean
+    SimpleMessageListenerContainer processContainer(ConnectionFactory connectionFactory, DelayConsumer processReceiver) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(DELAY_PROCESS_QUEUE_NAME); // 监听delay_process_queue
+        container.setMessageListener(new MessageListenerAdapter(processReceiver));
+        return container;
+    }
 
     /**
      * 定义rabbit template用于数据的接收和发送

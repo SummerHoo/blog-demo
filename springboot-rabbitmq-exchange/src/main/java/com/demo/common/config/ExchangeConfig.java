@@ -42,4 +42,24 @@ public class ExchangeConfig {
         return fanoutExchange;
     }
 
+    /**
+     * 死信交换机
+     * @return
+     */
+    @Bean
+    public DirectExchange  delayExchange(){
+        DirectExchange directExchange = new DirectExchange(RabbitMqConfig.DELAY_EXCHANGE_NAME,true,false);
+        return directExchange;
+    }
+
+    /**
+     * 延迟交换机
+     * @return
+     */
+    @Bean
+    public DirectExchange  perQueueTTLExchange(){
+        DirectExchange directExchange = new DirectExchange(RabbitMqConfig.QUEUE_TTL_EXCHANGE_NAME,true,false);
+        return directExchange;
+    }
+
 }

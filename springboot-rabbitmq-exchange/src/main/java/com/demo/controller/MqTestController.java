@@ -40,4 +40,18 @@ public class MqTestController {
         firstSender.sendFanout(uuid,message);
         return uuid;
     }
+
+    @GetMapping("/sendDelayMsg")
+    public String sendDelayMsg(String message) throws InterruptedException {
+        String uuid = UUID.randomUUID().toString();
+        firstSender.sendPerQueueTTL(message);
+        return uuid;
+    }
+
+    @GetMapping("/sendDelayMsg2")
+    public String sendDelayMsg2(String message) throws InterruptedException {
+        String uuid = UUID.randomUUID().toString();
+        firstSender.sendPerQueueTTL2(message);
+        return uuid;
+    }
 }

@@ -1,10 +1,17 @@
 package com.demo.mqproduct;
 
+import com.demo.common.config.ExpirationMessagePostProcessor;
 import com.demo.common.config.RabbitMqConfig;
+import com.demo.mqconsumer.DelayConsumer;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,4 +55,27 @@ public class FirstProduct {
     }
 
 
+    public void sendPerQueueTTL(Object message) throws InterruptedException {
+        DelayConsumer.latch = new CountDownLatch(3);
+        for (int i = 1; i <= 3; i++) {
+            rabbitTemplate.convertAndSend(RabbitMqConfig.QUEUE_TTL_EXCHANGE_NAME,RabbitMqConfig.QUEUE_TTL_ROUTING_KEY, message);
+        }
+        DelayConsumer.latch.await();
+    }
+
+
+    /**
+     * 延迟时间不一致
+     * @param message
+     * @throws InterruptedException
+     */
+    public void sendPerQueueTTL2(Object message) throws InterruptedException {
+        DelayConsumer.latch = new CountDownLatch(3);
+        for (int i = 1; i <= 3; i++) {
+            long expiration = i * 1000;
+            rabbitTemplate.convertAndSend(RabbitMqConfig.QUEUE_TTL_EXCHANGE_NAME,RabbitMqConfig.QUEUE_TTL_ROUTING_KEY2,
+                    message+" the expiration time is "+expiration,new ExpirationMessagePostProcessor(expiration));
+        }
+        DelayConsumer.latch.await();
+    }
 }
