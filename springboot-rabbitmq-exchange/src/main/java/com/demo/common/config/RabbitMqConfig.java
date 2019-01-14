@@ -2,6 +2,7 @@ package com.demo.common.config;
 
 import com.demo.mqcallback.MsgSendConfirmCallBack;
 import com.demo.mqconsumer.DelayConsumer;
+import com.demo.mqconsumer.FirstConsumer;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -76,6 +77,8 @@ public class RabbitMqConfig {
     private QueueConfig queueConfig;
     @Autowired
     private ExchangeConfig exchangeConfig;
+    @Autowired
+    private FirstConsumer firstConsumer;
 
     /**
      * 连接工厂
@@ -160,6 +163,7 @@ public class RabbitMqConfig {
         simpleMessageListenerContainer.setMaxConcurrentConsumers(5);
         simpleMessageListenerContainer.setConcurrentConsumers(1);
         simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
+        simpleMessageListenerContainer.setMessageListener(firstConsumer);
         return simpleMessageListenerContainer;
     }
 
@@ -212,4 +216,7 @@ public class RabbitMqConfig {
     public MsgSendConfirmCallBack msgSendConfirmCallBack(){
         return new MsgSendConfirmCallBack();
     }
+
+
+
 }

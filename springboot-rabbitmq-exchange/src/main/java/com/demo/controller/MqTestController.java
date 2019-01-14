@@ -27,6 +27,13 @@ public class MqTestController {
         return uuid;
     }
 
+    @GetMapping("/send2")
+    public String send2(String message){
+        String uuid = UUID.randomUUID().toString();
+        firstSender.send2(uuid,message);
+        return uuid;
+    }
+
     @GetMapping("/sendTopicMsg")
     public String sendTopicMsg(String message){
         String uuid = UUID.randomUUID().toString();

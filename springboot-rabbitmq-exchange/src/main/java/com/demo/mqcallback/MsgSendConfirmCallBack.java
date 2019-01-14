@@ -20,4 +20,6 @@ public class MsgSendConfirmCallBack implements RabbitTemplate.ConfirmCallback {
             System.out.println("消息发送失败:" + s+"\n重新发送");
         }
     }
+
+
 }

@@ -32,10 +32,19 @@ public class FirstProduct {
      */
     public void send(String uuid,Object message) {
         CorrelationData correlationId = new CorrelationData(uuid);
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE, RabbitMqConfig.ROUTINGKEY2,
-                message, correlationId);
+        for (int i = 0; i < 5; i++) {
+            rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE, RabbitMqConfig.ROUTINGKEY1,
+                    (Object) (String.valueOf(message)+i), correlationId);
+        }
     }
 
+    public void send2(String uuid,Object message) {
+        CorrelationData correlationId = new CorrelationData(uuid);
+        for (int i = 0; i < 5; i++) {
+            rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE, RabbitMqConfig.ROUTINGKEY2,
+                    (Object) (String.valueOf(message)+i), correlationId);
+        }
+    }
 
     /**
      * TopicExchange 生产者

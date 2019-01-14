@@ -1,5 +1,7 @@
 package com.demo.mqconsumer;
 
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class SecondConsumer {
 
     @RabbitListener(queues = {"second-queue"}, containerFactory = "rabbitListenerContainerFactory")
-    public void handleMessage(String message) throws Exception {
+    public void handleMessage(String message, Channel channel, Message messages) throws Exception {
         // 处理消息
         System.out.println("Second Consumer {} handleMessage :"+message);
     }
